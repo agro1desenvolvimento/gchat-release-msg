@@ -1,0 +1,85 @@
+name: 'Google Chat release message'
+description: 'Send a message to Google Chat when a release is created'
+
+inputs:
+  webhook-url:
+    description: 'Google Chat webhook URL'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Send Message
+      shell: bash
+      run: |
+        DATA=$(cat <<EOF
+        {
+          "cardsV2": [
+            {
+              "cardId": "card-release",
+              "card": {
+                "header": {
+                  "title": "New Release",
+                  "subtitle": "${{ github.repository }}"
+                },
+                "sections": [
+                  {
+                    "collapsible": false,
+                    "widgets": [
+                      {
+                        "decoratedText": {
+                          "topLabel": "Name",
+                          "text": "${{ github.event.release.name }}"
+                        }
+                      },
+                      {
+                        "decoratedText": {
+                          "topLabel": "Tag",
+                          "text": "${{ github.event.release.tag_name }}"
+                        }
+                      },
+                      {
+                        "decoratedText": {
+                          "topLabel": "Target",
+                          "text": "${{ github.event.release.target_commitish }}"
+                        }
+                      },
+                      {
+                        "divider": {}
+                      },
+                      {
+                        "buttonList": {
+                          "buttons": [
+                            {
+                              "text": "View Release",
+                              "type": "FILLED",
+                              "onClick": {
+                                "openLink": {
+                                  "url": "${{ github.event.release.html_url }}"
+                                }
+                              }
+                            },
+                            {
+                              "text": "Open Repository",
+                              "type": "FILLED",
+                              "onClick": {
+                                "openLink": {
+                                  "url": "${{ github.server_url }}/${{ github.repository }}"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+        EOF
+        )
+        echo $DATA
+        echo ${{ inputs.webhook-url }}
+        curl -X POST "${{ inputs.webhook-url }}" -H 'Content-Type: application/json' -d "$DATA" 
