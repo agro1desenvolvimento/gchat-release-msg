@@ -1,8 +1,6 @@
 # Google Chat Release Message
 
 A GitHub Action to send a release notification to Google Chat when a new release is created.
-![alt text](image.png)
-
 
 ## Inputs
 
@@ -11,6 +9,8 @@ A GitHub Action to send a release notification to Google Chat when a new release
 | `webhook-url` | Google Chat webhook URL  | Yes      |
 
 ## Usage Example
+
+Create a new webhook in Google Chat and add the URL to your repository secrets.
 
 ```yaml
 name: Notify Google Chat on Release
