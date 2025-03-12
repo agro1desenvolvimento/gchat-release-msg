@@ -1,6 +1,7 @@
 # Google Chat Release Message
 
 A GitHub Action to send a release notification to Google Chat when a new release is created.
+![alt text](image.png)
 
 ## Inputs
 
